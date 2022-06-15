@@ -1,51 +1,43 @@
 package com.example.lab3_3;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    private ArrayList<CountryItem> mCountryList;
-    private CountryAdapter mAdapter;
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
+
+    String[] countryNames={"France","Korea", "KSA", "US"};
+    int flags[] = {R.drawable.france, R.drawable.korea, R.drawable.ksa, R.drawable.us};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Spinner spin = (Spinner) findViewById(R.id.simpleSpinner);
+        spin.setOnItemSelectedListener(this);
 
-        initList();
-
-        Spinner spinnerCountries = findViewById(R.id.spinner_countries);
-
-        mAdapter = new CountryAdapter(this, mCountryList);
-        spinnerCountries.setAdapter(mAdapter);
-
-        spinnerCountries.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CountryItem clickedItem = (CountryItem) parent.getItemAtPosition(position);
-                String clickedCountryName = clickedItem.getCountryName();
-                Toast.makeText(MainActivity.this, clickedCountryName + " selected", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        CustomAdapter customAdapter=new CustomAdapter(getApplicationContext(),flags,countryNames);
+        spin.setAdapter(customAdapter);
     }
 
-    private void initList() {
-        mCountryList = new ArrayList<>();
-        mCountryList.add(new CountryItem("KSA", R.drawable.ksa));
-        mCountryList.add(new CountryItem("France", R.drawable.france));
-        mCountryList.add(new CountryItem("USA", R.drawable.us));
-        mCountryList.add(new CountryItem("Korea", R.drawable.korea));
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
+        Toast.makeText(getApplicationContext(),"You chose "+ countryNames[position], Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
